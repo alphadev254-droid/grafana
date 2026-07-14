@@ -1,4 +1,7 @@
 .env
 data/
+secrets/*
+!secrets/.gitkeep
+!secrets/icims_backend_metrics_token.example
 logs/*.log
 logs/**/*.log

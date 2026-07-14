@@ -68,6 +68,26 @@ host.docker.internal:8000/metrics
 
 The default backend scrape job is `icims-backend` on `host.docker.internal:5000/metrics`. Update `prometheus/prometheus.yml` if your backend uses a different port.
 
+The ICIMS backend metrics endpoint is token-protected. Set the same token in the backend `.env` and in Prometheus:
+
+```bash
+openssl rand -hex 32
+```
+
+Backend `.env`:
+
+```env
+METRICS_TOKEN=your-generated-token
+```
+
+Grafana stack secret file:
+
+```bash
+mkdir -p /data/grafana/secrets
+printf '%s' 'your-generated-token' > /data/grafana/secrets/icims_backend_metrics_token
+chmod 600 /data/grafana/secrets/icims_backend_metrics_token
+```
+
 For Node.js, expose `/metrics` with `prom-client`.
 
 ## Traces
