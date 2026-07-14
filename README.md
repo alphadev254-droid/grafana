@@ -73,6 +73,8 @@ OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 
 Alloy forwards traces to Tempo. Grafana reads Tempo as a datasource.
 
+Tempo runs as root in this Compose file so it can write to the Docker-managed local trace volume. Keep Tempo bound to `127.0.0.1` unless you put it behind a private network.
+
 ## Useful Commands
 
 ```powershell
