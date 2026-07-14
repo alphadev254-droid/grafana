@@ -50,6 +50,8 @@ Logs go to Loki and are available in Grafana Explore.
 
 ## Metrics
 
+Prometheus is internal to Docker by default, so it does not bind host port `9090`. Grafana reaches it through the Docker network at `http://prometheus:9090`.
+
 Prometheus scrapes:
 
 ```text
