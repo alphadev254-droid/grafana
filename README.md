@@ -62,11 +62,11 @@ cadvisor:8080        # Docker container CPU/RAM
 Prometheus scrapes:
 
 ```text
-host.docker.internal:5000/metrics
+host.docker.internal:5001/metrics
 host.docker.internal:8000/metrics
 ```
 
-The default backend scrape job is `icims-backend` on `host.docker.internal:5000/metrics`. Update `prometheus/prometheus.yml` if your backend uses a different port.
+The default backend scrape job is `icims-backend` on `host.docker.internal:5001/metrics`. Update `prometheus/prometheus.yml` if your backend uses a different port.
 
 The ICIMS backend metrics endpoint is token-protected. Set the same token in the backend `.env` and in Prometheus:
 

@@ -25,7 +25,7 @@ scrape_configs:
       type: Bearer
       credentials_file: /etc/prometheus/secrets/icims_backend_metrics_token
     static_configs:
-      - targets: ["host.docker.internal:5000"]
+      - targets: ["host.docker.internal:5001"]
 
   - job_name: laravel-app
     metrics_path: /metrics
