@@ -14,7 +14,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(rate(http_requests_total[5m])) by (job)",
+          "expr": "sum(rate(icims_backend_http_requests_total[5m])) by (job)",
           "legendFormat": "{{job}}"
         }
       ]
@@ -26,7 +26,7 @@
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (job)",
+          "expr": "sum(rate(icims_backend_http_requests_total{status_code=~\"5..\"}[5m])) by (job)",
           "legendFormat": "{{job}} 5xx"
         }
       ]
