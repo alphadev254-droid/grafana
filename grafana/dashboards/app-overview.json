@@ -1,0 +1,46 @@
+{
+  "uid": "app-overview",
+  "title": "App Overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "tags": ["apps", "icims"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "HTTP Requests",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(http_requests_total[5m])) by (job)",
+          "legendFormat": "{{job}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "HTTP Error Rate",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) by (job)",
+          "legendFormat": "{{job}} 5xx"
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Recent App Logs",
+      "gridPos": { "x": 0, "y": 8, "w": 24, "h": 10 },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "loki" },
+          "expr": "{job=\"host-apps\"}"
+        }
+      ]
+    }
+  ]
+}
