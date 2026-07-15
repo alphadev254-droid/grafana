@@ -9,24 +9,38 @@
   "panels": [
     {
       "type": "timeseries",
-      "title": "HTTP Requests",
+      "title": "HTTP Requests per Minute",
       "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(rate(icims_backend_http_requests_total[5m])) by (job)",
+          "expr": "sum(increase(icims_backend_http_requests_total[1m])) by (job)",
           "legendFormat": "{{job}}"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "HTTP Error Rate",
+      "title": "5xx Errors per Minute",
       "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(rate(icims_backend_http_requests_total{status_code=~\"5..\"}[5m])) by (job)",
+          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"5..\"}[1m])) by (job)",
           "legendFormat": "{{job}} 5xx"
         }
       ]
