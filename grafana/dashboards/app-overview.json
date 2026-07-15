@@ -2,58 +2,155 @@
   "uid": "app-overview",
   "title": "App Overview",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "refresh": "10s",
   "tags": ["apps", "icims"],
   "timezone": "browser",
   "panels": [
     {
-      "type": "timeseries",
-      "title": "HTTP Requests per Minute",
-      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "decimals": 0
-        },
-        "overrides": []
-      },
+      "type": "stat",
+      "title": "Requests Last 5m",
+      "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
       "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(increase(icims_backend_http_requests_total[1m])) by (job)",
-          "legendFormat": "{{job}}"
-        }
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_http_requests_total[5m]))", "legendFormat": "5m" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Requests Last 1h",
+      "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_http_requests_total[1h]))", "legendFormat": "1h" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Requests Last 24h",
+      "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_http_requests_total[24h]))", "legendFormat": "24h" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "In-flight Requests",
+      "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(icims_backend_http_requests_in_flight)", "legendFormat": "in-flight" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Backend Memory",
+      "gridPos": { "x": 16, "y": 0, "w": 4, "h": 4 },
+      "fieldConfig": { "defaults": { "unit": "bytes", "decimals": 1 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "icims_backend_process_resident_memory_bytes", "legendFormat": "rss" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Backend Uptime",
+      "gridPos": { "x": 20, "y": 0, "w": 4, "h": 4 },
+      "fieldConfig": { "defaults": { "unit": "s", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "time() - icims_backend_process_start_time_seconds", "legendFormat": "uptime" }
       ]
     },
     {
       "type": "timeseries",
-      "title": "5xx Errors per Minute",
-      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "decimals": 0
-        },
-        "overrides": []
-      },
+      "title": "HTTP Requests per Minute",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
       "targets": [
-        {
-          "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"5..\"}[1m])) by (job)",
-          "legendFormat": "{{job}} 5xx"
-        }
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_http_requests_total[1m]))", "legendFormat": "requests" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Status Codes per Minute",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"2..\"}[1m]))", "legendFormat": "2xx" },
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"4..\"}[1m]))", "legendFormat": "4xx" },
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"5..\"}[1m]))", "legendFormat": "5xx" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Average and p95 Response Time",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "s", "decimals": 3 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(rate(icims_backend_http_request_duration_seconds_sum[5m])) / sum(rate(icims_backend_http_request_duration_seconds_count[5m]))", "legendFormat": "average" },
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "histogram_quantile(0.95, sum(rate(icims_backend_http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p95" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Backend CPU",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "percentunit", "decimals": 3 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "rate(icims_backend_process_cpu_seconds_total[5m])", "legendFormat": "cpu cores" }
+      ]
+    },
+    {
+      "type": "bargauge",
+      "title": "Requests by Route (Last 5m)",
+      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "topk(10, sum(increase(icims_backend_http_requests_total[5m])) by (route))", "legendFormat": "{{route}}" }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Slowest Routes p95 (Last 5m)",
+      "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "s", "decimals": 3 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "topk(10, histogram_quantile(0.95, sum(rate(icims_backend_http_request_duration_seconds_bucket[5m])) by (le, route)))", "legendFormat": "{{route}}", "format": "table", "instant": true }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Login Attempts per Minute",
+      "gridPos": { "x": 0, "y": 28, "w": 8, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_auth_login_attempts_total[1m])) by (status)", "legendFormat": "{{status}}" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Payments per Minute",
+      "gridPos": { "x": 8, "y": 28, "w": 8, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_payment_events_total[1m])) by (status)", "legendFormat": "{{status}}" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Withdrawals per Minute",
+      "gridPos": { "x": 16, "y": 28, "w": 8, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "short", "decimals": 0 }, "overrides": [] },
+      "targets": [
+        { "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(increase(icims_backend_withdrawal_events_total[1m])) by (status)", "legendFormat": "{{status}}" }
       ]
     },
     {
       "type": "logs",
       "title": "Recent App Logs",
-      "gridPos": { "x": 0, "y": 8, "w": 24, "h": 10 },
+      "gridPos": { "x": 0, "y": 36, "w": 24, "h": 10 },
       "targets": [
-        {
-          "datasource": { "type": "loki", "uid": "loki" },
-          "expr": "{job=\"host-apps\"}"
-        }
+        { "datasource": { "type": "loki", "uid": "loki" }, "expr": "{job=\"host-apps\"}" }
       ]
     }
   ]
