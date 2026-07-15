@@ -63,7 +63,6 @@ Prometheus scrapes:
 
 ```text
 10.0.1.1:5001/metrics
-host.docker.internal:8000/metrics
 ```
 
 The default backend scrape job is `icims-backend` on the Docker gateway at `10.0.1.1:5001/metrics`. Update `prometheus/prometheus.yml` if your Docker network gateway or backend port is different.
