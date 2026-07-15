@@ -62,11 +62,18 @@ cadvisor:8080        # Docker container CPU/RAM
 Prometheus scrapes:
 
 ```text
-host.docker.internal:5001/metrics
+10.0.1.1:5001/metrics
 host.docker.internal:8000/metrics
 ```
 
-The default backend scrape job is `icims-backend` on `host.docker.internal:5001/metrics`. Update `prometheus/prometheus.yml` if your backend uses a different port.
+The default backend scrape job is `icims-backend` on the Docker gateway at `10.0.1.1:5001/metrics`. Update `prometheus/prometheus.yml` if your Docker network gateway or backend port is different.
+
+Allow the Grafana Docker subnet to reach the backend metrics port:
+
+```bash
+ufw allow from 10.0.1.0/24 to any port 5001 proto tcp
+ufw reload
+```
 
 The ICIMS backend metrics endpoint is token-protected. Set the same token in the backend `.env` and in Prometheus:
 
@@ -85,7 +92,7 @@ Grafana stack secret file:
 ```bash
 mkdir -p /data/grafana/secrets
 printf '%s' 'your-generated-token' > /data/grafana/secrets/icims_backend_metrics_token
-chmod 600 /data/grafana/secrets/icims_backend_metrics_token
+chmod 644 /data/grafana/secrets/icims_backend_metrics_token
 ```
 
 For Node.js, expose `/metrics` with `prom-client`.
