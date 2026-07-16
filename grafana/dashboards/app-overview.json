@@ -32,7 +32,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total[$__range]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"$status_code\"}[$__range]))",
           "legendFormat": "selected range"
         }
       ]
@@ -59,7 +59,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"2..\"}[$__range]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"2..\"}[$__range]))",
           "legendFormat": "2xx"
         }
       ]
@@ -86,7 +86,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"4..|5..\"}[$__range]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"4..|5..\"}[$__range]))",
           "legendFormat": "4xx + 5xx"
         }
       ]
@@ -113,7 +113,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(icims_backend_http_requests_in_flight)",
+          "expr": "sum(icims_backend_http_requests_in_flight{method=~\"$method\",route=~\"$route\"})",
           "legendFormat": "in-flight"
         }
       ]
@@ -283,7 +283,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total[1m]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"$status_code\"}[1m]))",
           "legendFormat": "requests"
         }
       ]
@@ -356,7 +356,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"2..\"}[1m]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"2..\"}[1m]))",
           "legendFormat": "2xx"
         },
         {
@@ -364,7 +364,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"4..\"}[1m]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"4..\"}[1m]))",
           "legendFormat": "4xx"
         },
         {
@@ -372,7 +372,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"5..\"}[1m]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"5..\"}[1m]))",
           "legendFormat": "5xx"
         }
       ]
@@ -399,7 +399,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total[1m])) by (route)",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"$status_code\"}[1m])) by (route)",
           "legendFormat": "{{route}}"
         }
       ]
@@ -453,7 +453,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(icims_backend_http_request_duration_seconds_bucket[1m])) by (le, route))",
+          "expr": "histogram_quantile(0.95, sum(rate(icims_backend_http_request_duration_seconds_bucket{method=~\"$method\",route=~\"$route\",status_code=~\"$status_code\"}[1m])) by (le, route))",
           "legendFormat": "{{route}}"
         }
       ]
@@ -526,7 +526,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total[1m])) by (route, status_code)",
+          "expr": "sum(increase(icims_backend_http_requests_total{method=~\"$method\",route=~\"$route\",status_code=~\"$status_code\"}[1m])) by (route, status_code)",
           "legendFormat": "{{route}} {{status_code}}"
         }
       ]
@@ -612,5 +612,69 @@
         }
       ]
     }
-  ]
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "method",
+        "type": "query",
+        "label": "Method",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "query": "label_values(icims_backend_http_requests_total, method)",
+        "refresh": 1,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "hide": 0
+      },
+      {
+        "name": "route",
+        "type": "query",
+        "label": "Route",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "query": "label_values(icims_backend_http_requests_total, route)",
+        "refresh": 1,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "hide": 0
+      },
+      {
+        "name": "status_code",
+        "type": "query",
+        "label": "Status Code",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "query": "label_values(icims_backend_http_requests_total, status_code)",
+        "refresh": 1,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "hide": 0
+      }
+    ]
+  }
 }

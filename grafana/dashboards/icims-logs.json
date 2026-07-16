@@ -21,24 +21,81 @@
         "name": "level",
         "type": "custom",
         "label": "Level",
-        "query": "all,debug,info,warn,error",
+        "query": ".*,debug,info,warn,error",
+        "multi": false,
+        "includeAll": false,
         "current": {
-          "text": "all",
-          "value": "all"
+          "text": "All",
+          "value": ".*"
         },
-        "options": [],
         "hide": 0
       },
       {
         "name": "event",
         "type": "custom",
         "label": "Event",
-        "query": "all,http_request,unhandled_error,auth_login_attempt,payment_event,withdrawal_event",
+        "query": ".*,http_request,unhandled_error,auth_login_attempt,payment_event,withdrawal_event",
+        "multi": false,
+        "includeAll": false,
         "current": {
-          "text": "all",
-          "value": "all"
+          "text": "All",
+          "value": ".*"
         },
-        "options": [],
+        "hide": 0
+      },
+      {
+        "name": "requestId",
+        "type": "textbox",
+        "label": "Request ID",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "hide": 0
+      },
+      {
+        "name": "route",
+        "type": "textbox",
+        "label": "Route contains",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "hide": 0
+      },
+      {
+        "name": "statusCode",
+        "type": "textbox",
+        "label": "Status code",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "hide": 0
+      },
+      {
+        "name": "userId",
+        "type": "textbox",
+        "label": "User ID",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "hide": 0
+      },
+      {
+        "name": "churchId",
+        "type": "textbox",
+        "label": "Church ID",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
         "hide": 0
       }
     ]
@@ -70,7 +127,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({service=\"icims-backend\"} | json | level=\"error\" [$__range]))",
+          "expr": "sum(count_over_time({service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | level=\"error\" [$__range]))",
           "legendFormat": "errors"
         }
       ]
@@ -101,7 +158,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({service=\"icims-backend\"} | json | level=\"warn\" [$__range]))",
+          "expr": "sum(count_over_time({service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | level=\"warn\" [$__range]))",
           "legendFormat": "warnings"
         }
       ]
@@ -128,7 +185,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({service=\"icims-backend\"} | json | event=\"payment_event\" [$__range]))",
+          "expr": "sum(count_over_time({service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | event=\"payment_event\" [$__range]))",
           "legendFormat": "payments"
         }
       ]
@@ -155,7 +212,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({service=\"icims-backend\"} | json | event=\"withdrawal_event\" [$__range]))",
+          "expr": "sum(count_over_time({service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | event=\"withdrawal_event\" [$__range]))",
           "legendFormat": "withdrawals"
         }
       ]
@@ -182,7 +239,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (log_level) (count_over_time({service=\"icims-backend\"} | json | label_format log_level=\"{{.level}}\" [1m]))",
+          "expr": "sum by (log_level) (count_over_time({service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | label_format log_level=\"{{.level}}\" [1m]))",
           "legendFormat": "{{log_level}}"
         }
       ]
@@ -209,7 +266,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (key_event) (count_over_time({service=\"icims-backend\"} | json | event =~ \"auth_login_attempt|payment_event|withdrawal_event|unhandled_error\" | label_format key_event=\"{{.event}}\" [1m]))",
+          "expr": "sum by (key_event) (count_over_time({service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | event =~ \"auth_login_attempt|payment_event|withdrawal_event|unhandled_error\" | label_format key_event=\"{{.event}}\" [1m]))",
           "legendFormat": "{{key_event}}"
         }
       ]
@@ -229,7 +286,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{service=\"icims-backend\"} | json | level=\"error\""
+          "expr": "{service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | level=\"error\""
         }
       ]
     },
@@ -248,7 +305,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{service=\"icims-backend\"} | json | event =~ \"auth_login_attempt|payment_event|withdrawal_event\""
+          "expr": "{service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | event =~ \"auth_login_attempt|payment_event|withdrawal_event\""
         }
       ]
     },
@@ -267,7 +324,26 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{service=\"icims-backend\"} | json"
+          "expr": "{service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\""
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Slow Requests from Logs",
+      "gridPos": {
+        "x": 0,
+        "y": 30,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "expr": "{service=\"icims-backend\"} |= \"$requestId\" |= \"$route\" |= \"$statusCode\" |= \"$userId\" |= \"$churchId\" | json | level=~\"$level\" | event=~\"$event\" | event=\"http_request\" | durationMs >= 1000"
         }
       ]
     }
