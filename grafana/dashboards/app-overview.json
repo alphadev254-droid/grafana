@@ -611,25 +611,6 @@
           "legendFormat": "{{status}}"
         }
       ]
-    },
-    {
-      "type": "logs",
-      "title": "Recent ICIMS Backend Logs",
-      "gridPos": {
-        "x": 0,
-        "y": 40,
-        "w": 24,
-        "h": 10
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "expr": "{service=\"icims-backend\"} | json"
-        }
-      ]
     }
   ]
 }
