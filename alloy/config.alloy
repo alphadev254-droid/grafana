@@ -8,6 +8,21 @@ loki.source.file "app_logs" {
     {
       __path__ = "/var/log/apps/**/*.log",
       job      = "host-apps",
+      service  = "host-apps",
+    },
+  ]
+
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.source.file "icims_backend_pm2_logs" {
+  targets = [
+    {
+      __path__     = "/var/log/pm2/icims-backend*.log",
+      job          = "icims-backend",
+      service      = "icims-backend",
+      environment  = "production",
+      source       = "pm2",
     },
   ]
 

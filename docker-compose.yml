@@ -96,6 +96,7 @@ services:
     volumes:
       - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
       - ./logs:/var/log/apps:ro
+      - /root/.pm2/logs:/var/log/pm2:ro
     depends_on:
       - loki
       - tempo
