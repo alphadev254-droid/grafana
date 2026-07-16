@@ -130,7 +130,11 @@
       "fieldConfig": {
         "defaults": {
           "unit": "bytes",
-          "decimals": 1
+          "decimals": 1,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "blue"
+          }
         },
         "overrides": []
       },
@@ -157,7 +161,11 @@
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "decimals": 0
+          "decimals": 0,
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "green"
+          }
         },
         "overrides": []
       },
@@ -255,7 +263,7 @@
     },
     {
       "type": "timeseries",
-      "title": "HTTP Requests over Time",
+      "title": "HTTP Requests over Time (tw=1m)",
       "gridPos": {
         "x": 0,
         "y": 8,
@@ -275,14 +283,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total[$__rate_interval]))",
+          "expr": "sum(increase(icims_backend_http_requests_total[1m]))",
           "legendFormat": "requests"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Status Codes over Time",
+      "title": "Status Codes over Time (tw=1m)",
       "gridPos": {
         "x": 12,
         "y": 8,
@@ -348,7 +356,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"2..\"}[$__rate_interval]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"2..\"}[1m]))",
           "legendFormat": "2xx"
         },
         {
@@ -356,7 +364,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"4..\"}[$__rate_interval]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"4..\"}[1m]))",
           "legendFormat": "4xx"
         },
         {
@@ -364,14 +372,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"5..\"}[$__rate_interval]))",
+          "expr": "sum(increase(icims_backend_http_requests_total{status_code=~\"5..\"}[1m]))",
           "legendFormat": "5xx"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Requests by Route over Time",
+      "title": "Requests by Route over Time (tw=1m)",
       "gridPos": {
         "x": 0,
         "y": 16,
@@ -391,14 +399,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total[$__rate_interval])) by (route)",
+          "expr": "sum(increase(icims_backend_http_requests_total[1m])) by (route)",
           "legendFormat": "{{route}}"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Backend CPU",
+      "title": "Backend CPU (tw=1m)",
       "gridPos": {
         "x": 12,
         "y": 16,
@@ -418,14 +426,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(icims_backend_process_cpu_seconds_total[$__rate_interval])",
+          "expr": "rate(icims_backend_process_cpu_seconds_total[1m])",
           "legendFormat": "cpu cores"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Route p95 Response Time over Time",
+      "title": "Route p95 Response Time over Time (tw=1m)",
       "gridPos": {
         "x": 0,
         "y": 24,
@@ -445,14 +453,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(icims_backend_http_request_duration_seconds_bucket[$__rate_interval])) by (le, route))",
+          "expr": "histogram_quantile(0.95, sum(rate(icims_backend_http_request_duration_seconds_bucket[1m])) by (le, route))",
           "legendFormat": "{{route}}"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Route Status Codes over Time",
+      "title": "Route Status Codes over Time (tw=1m)",
       "gridPos": {
         "x": 12,
         "y": 24,
@@ -518,14 +526,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_http_requests_total[$__rate_interval])) by (route, status_code)",
+          "expr": "sum(increase(icims_backend_http_requests_total[1m])) by (route, status_code)",
           "legendFormat": "{{route}} {{status_code}}"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Login Attempts over Time",
+      "title": "Login Attempts over Time (tw=1m)",
       "gridPos": {
         "x": 0,
         "y": 32,
@@ -545,14 +553,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_auth_login_attempts_total[$__rate_interval])) by (status) or vector(0)",
+          "expr": "sum(increase(icims_backend_auth_login_attempts_total[1m])) by (status) or vector(0)",
           "legendFormat": "{{status}}"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Payments over Time",
+      "title": "Payments over Time (tw=1m)",
       "gridPos": {
         "x": 8,
         "y": 32,
@@ -572,14 +580,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_payment_events_total[$__rate_interval])) by (status) or vector(0)",
+          "expr": "sum(increase(icims_backend_payment_events_total[1m])) by (status) or vector(0)",
           "legendFormat": "{{status}}"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Withdrawals over Time",
+      "title": "Withdrawals over Time (tw=1m)",
       "gridPos": {
         "x": 16,
         "y": 32,
@@ -599,7 +607,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_withdrawal_events_total[$__rate_interval])) by (status) or vector(0)",
+          "expr": "sum(increase(icims_backend_withdrawal_events_total[1m])) by (status) or vector(0)",
           "legendFormat": "{{status}}"
         }
       ]
