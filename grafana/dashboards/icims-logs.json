@@ -162,7 +162,7 @@
     },
     {
       "type": "timeseries",
-      "title": "Log Volume by Level",
+      "title": "Log Volume by Level (tw=1m)",
       "gridPos": {
         "x": 0,
         "y": 4,
@@ -182,14 +182,14 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (level) (count_over_time({service=\"icims-backend\"} | json [1m]))",
-          "legendFormat": "{{level}}"
+          "expr": "sum by (log_level) (count_over_time({service=\"icims-backend\"} | json | label_format log_level=\"{{.level}}\" [1m]))",
+          "legendFormat": "{{log_level}}"
         }
       ]
     },
     {
       "type": "timeseries",
-      "title": "Key Events Over Time",
+      "title": "Key Events Over Time (tw=1m)",
       "gridPos": {
         "x": 12,
         "y": 4,
@@ -209,8 +209,8 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (event) (count_over_time({service=\"icims-backend\"} | json | event =~ \"auth_login_attempt|payment_event|withdrawal_event|unhandled_error\" [1m]))",
-          "legendFormat": "{{event}}"
+          "expr": "sum by (key_event) (count_over_time({service=\"icims-backend\"} | json | event =~ \"auth_login_attempt|payment_event|withdrawal_event|unhandled_error\" | label_format key_event=\"{{.event}}\" [1m]))",
+          "legendFormat": "{{key_event}}"
         }
       ]
     },
