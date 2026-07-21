@@ -2,7 +2,7 @@
   "uid": "app-overview",
   "title": "App Overview",
   "schemaVersion": 39,
-  "version": 2,
+  "version": 3,
   "refresh": "10s",
   "tags": [
     "apps",
@@ -273,7 +273,14 @@
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "decimals": 0
+          "decimals": 0,
+          "links": [
+            {
+              "title": "Open request logs for this time range",
+              "url": "/d/icims-logs/icims-logs?from=${__from}&to=${__to}&var-level=.*&var-event=http_request&var-requestId=&var-route=&var-statusCode=&var-userId=&var-churchId=",
+              "targetBlank": false
+            }
+          ]
         },
         "overrides": []
       },
@@ -300,7 +307,14 @@
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "decimals": 0
+          "decimals": 0,
+          "links": [
+            {
+              "title": "Open request logs for this time range",
+              "url": "/d/icims-logs/icims-logs?from=${__from}&to=${__to}&var-level=.*&var-event=http_request&var-requestId=&var-route=&var-statusCode=&var-userId=&var-churchId=",
+              "targetBlank": false
+            }
+          ]
         },
         "overrides": [
           {
@@ -389,7 +403,14 @@
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "decimals": 0
+          "decimals": 0,
+          "links": [
+            {
+              "title": "Open logs for this route",
+              "url": "/d/icims-logs/icims-logs?from=${__from}&to=${__to}&var-level=.*&var-event=http_request&var-requestId=&var-route=${__field.labels.route}&var-statusCode=&var-userId=&var-churchId=",
+              "targetBlank": false
+            }
+          ]
         },
         "overrides": []
       },
@@ -443,7 +464,14 @@
       "fieldConfig": {
         "defaults": {
           "unit": "s",
-          "decimals": 3
+          "decimals": 3,
+          "links": [
+            {
+              "title": "Open logs for this route",
+              "url": "/d/icims-logs/icims-logs?from=${__from}&to=${__to}&var-level=.*&var-event=http_request&var-requestId=&var-route=${__field.labels.route}&var-statusCode=&var-userId=&var-churchId=",
+              "targetBlank": false
+            }
+          ]
         },
         "overrides": []
       },
@@ -470,7 +498,14 @@
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "decimals": 0
+          "decimals": 0,
+          "links": [
+            {
+              "title": "Open logs for this route and status",
+              "url": "/d/icims-logs/icims-logs?from=${__from}&to=${__to}&var-level=.*&var-event=http_request&var-requestId=&var-route=${__field.labels.route}&var-statusCode=${__field.labels.status_code}&var-userId=&var-churchId=",
+              "targetBlank": false
+            }
+          ]
         },
         "overrides": [
           {
@@ -553,7 +588,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_auth_login_attempts_total[1m])) by (status) or vector(0)",
+          "expr": "sum(increase(icims_backend_auth_login_attempts_total[1m])) by (status)",
           "legendFormat": "{{status}}"
         }
       ]
@@ -580,7 +615,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_payment_events_total[1m])) by (status) or vector(0)",
+          "expr": "sum(increase(icims_backend_payment_events_total[1m])) by (status)",
           "legendFormat": "{{status}}"
         }
       ]
@@ -607,7 +642,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(icims_backend_withdrawal_events_total[1m])) by (status) or vector(0)",
+          "expr": "sum(increase(icims_backend_withdrawal_events_total[1m])) by (status)",
           "legendFormat": "{{status}}"
         }
       ]

@@ -13,6 +13,12 @@ datasources:
     type: loki
     access: proxy
     url: http://loki:3100
+    jsonData:
+      derivedFields:
+        - name: requestId
+          matcherRegex: '"requestId":"([^"]+)"'
+          url: '/d/icims-logs/icims-logs?from=${__from}&to=${__to}&var-level=.*&var-event=.*&var-requestId=$${__value.raw}&var-route=&var-statusCode=&var-userId=&var-churchId='
+          urlDisplayLabel: 'Open request logs'
 
   - name: Tempo
     uid: tempo
